@@ -50,7 +50,7 @@
   <li><strong>No accounts.</strong> You can use the app without signing in.</li>
   <li><strong>No tracking.</strong> No analytics SDKs, no advertising, no third-party trackers.</li>
   <li><strong>No data collection.</strong> Your recordings, scripts, and settings never leave your device through us.</li>
-  <li><strong>On-device processing.</strong> Speech recognition for captions and voice features runs on your device.</li>
+  <li><strong>On-device first.</strong> Speech recognition runs on your device when your language supports it; otherwise via Apple's speech service. We never receive it either way.</li>
 </ul>
 
 <h2>Camera and Microphone</h2>
@@ -60,7 +60,7 @@
 <p>With your permission (add-only access), finished recordings are saved to your device's Photos library. We do not read or browse your existing photos.</p>
 
 <h2>Speech Recognition</h2>
-<p>If you enable automatic captions or voice features, the app uses Apple's on-device Speech framework to transcribe the audio of your own recording into a subtitle file (<code>.srt</code>) stored locally. This transcription is performed on-device; the audio is not sent to us.</p>
+<p>If you enable automatic captions or voice features, the app uses Apple's Speech framework to transcribe the audio of your recording into a subtitle file (<code>.srt</code>) stored locally on your device. Recognition runs <strong>on-device</strong> when your language supports it; for languages without on-device support, Apple's speech recognition service processes the audio on your behalf. In either case, we (the developer) never receive your audio or transcripts — they stay between your device and Apple.</p>
 
 <h2>Documents You Import or Scan</h2>
 <p>Scripts you import (PDF/TXT) or scan are processed locally and stored on your device using Apple's on-device technologies (PDFKit, Vision OCR). They are not uploaded anywhere.</p>
@@ -98,7 +98,7 @@
   <li><strong>Fără conturi.</strong> Poți folosi aplicația fără autentificare.</li>
   <li><strong>Fără urmărire.</strong> Niciun SDK de analiză, nicio reclamă, niciun tracker terț.</li>
   <li><strong>Fără colectare de date.</strong> Înregistrările, scripturile și setările tale nu părăsesc dispozitivul prin noi.</li>
-  <li><strong>Procesare on-device.</strong> Recunoașterea vocală pentru subtitrări și funcțiile vocale rulează pe dispozitiv.</li>
+  <li><strong>On-device în primul rând.</strong> Recunoașterea vocală rulează pe dispozitiv când limba o suportă; altfel prin serviciul Apple. În ambele cazuri, noi nu o primim.</li>
 </ul>
 
 <h2>Cameră și microfon</h2>
@@ -108,7 +108,7 @@
 <p>Cu permisiunea ta (acces doar de adăugare), înregistrările finalizate sunt salvate în galeria foto. Nu citim și nu răsfoim pozele tale existente.</p>
 
 <h2>Recunoaștere vocală</h2>
-<p>Dacă activezi subtitrările automate sau funcțiile vocale, aplicația folosește framework-ul Speech de la Apple, on-device, pentru a transcrie audio-ul propriei înregistrări într-un fișier de subtitrări (<code>.srt</code>) păstrat local. Transcrierea se face pe dispozitiv; audio-ul nu ne este trimis.</p>
+<p>Dacă activezi subtitrările automate sau funcțiile vocale, aplicația folosește framework-ul Speech de la Apple pentru a transcrie audio-ul înregistrării într-un fișier de subtitrări (<code>.srt</code>) păstrat local pe dispozitiv. Recunoașterea rulează <strong>on-device</strong> când limba o suportă; pentru limbile fără suport on-device, serviciul de recunoaștere vocală Apple procesează audio-ul. În ambele cazuri, noi (dezvoltatorul) nu primim niciodată audio-ul sau transcrierile — rămân între dispozitivul tău și Apple.</p>
 
 <h2>Documente importate sau scanate</h2>
 <p>Scripturile importate (PDF/TXT) sau scanate sunt procesate local și stocate pe dispozitiv cu tehnologii Apple on-device (PDFKit, Vision OCR). Nu sunt încărcate nicăieri.</p>
