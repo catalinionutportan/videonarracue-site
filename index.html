@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>VideoNarraCue — Teleprompter + Camera Recorder for iPhone</title>
+<meta name="description" content="Read your script while you record. A teleprompter and camera recorder for iPhone with WYSIWYG formats, on-device captions, logo overlay, and volume-button remote. Privacy-first, nothing leaves your device.">
+<link rel="canonical" href="https://videonarracue.app/">
+<meta property="og:type" content="website">
+<meta property="og:title" content="VideoNarraCue — Teleprompter + Camera Recorder">
+<meta property="og:description" content="Read your script while you record. Privacy-first, on-device, for iPhone.">
+<meta property="og:url" content="https://videonarracue.app/">
+<style>
+  :root{
+    --bg:#07080c; --bg2:#0d0f16; --card:#12141d; --line:rgba(255,255,255,.09);
+    --text:#f2f3f7; --muted:#9aa0ad; --accent:#ffd23f; --accent2:#0a84ff;
+    --radius:18px; --maxw:1080px;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth}
+  body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    background:var(--bg);color:var(--text);line-height:1.6;-webkit-font-smoothing:antialiased}
+  a{color:inherit;text-decoration:none}
+  .wrap{max-width:var(--maxw);margin:0 auto;padding:0 22px}
+  .muted{color:var(--muted)}
+  .accent{color:var(--accent)}
+
+  /* Nav */
+  nav{position:sticky;top:0;z-index:50;backdrop-filter:saturate(160%) blur(14px);
+    background:rgba(7,8,12,.72);border-bottom:1px solid var(--line)}
+  nav .wrap{display:flex;align-items:center;justify-content:space-between;height:62px}
+  .brand{display:flex;align-items:center;gap:10px;font-weight:700;letter-spacing:.2px}
+  .logo-mark{width:30px;height:30px;border-radius:8px;background:linear-gradient(160deg,#1b1e2b,#0a0b10);
+    display:grid;place-items:center;border:1px solid var(--line)}
+  .logo-mark span{display:block;width:15px;height:2.5px;border-radius:2px;background:#6b7180;box-shadow:0 -5px 0 #6b7180,0 5px 0 var(--accent)}
+  .nav-links{display:flex;gap:26px;font-size:.95rem}
+  .nav-links a{color:var(--muted)}.nav-links a:hover{color:var(--text)}
+  @media(max-width:680px){.nav-links{display:none}}
+
+  /* Hero */
+  .hero{position:relative;overflow:hidden;padding:84px 0 40px;
+    background:radial-gradient(1200px 500px at 70% -10%,rgba(10,132,255,.16),transparent 60%),
+               radial-gradient(900px 500px at 10% 0%,rgba(255,210,63,.10),transparent 55%)}
+  .hero .wrap{display:grid;grid-template-columns:1.05fr .95fr;gap:40px;align-items:center}
+  @media(max-width:860px){.hero .wrap{grid-template-columns:1fr;text-align:center}}
+  .badge{display:inline-block;font-size:.78rem;letter-spacing:.5px;text-transform:uppercase;
+    color:var(--accent);border:1px solid rgba(255,210,63,.35);border-radius:999px;padding:5px 12px;margin-bottom:20px}
+  h1{font-size:clamp(2.1rem,5vw,3.4rem);line-height:1.08;letter-spacing:-.5px;font-weight:800}
+  .hero p.sub{font-size:1.18rem;color:var(--muted);margin:18px 0 28px;max-width:30em}
+  @media(max-width:860px){.hero p.sub{margin-left:auto;margin-right:auto}}
+  .cta{display:flex;gap:14px;flex-wrap:wrap}
+  @media(max-width:860px){.cta{justify-content:center}}
+  .btn{display:inline-flex;align-items:center;gap:9px;font-weight:600;border-radius:12px;
+    padding:13px 20px;border:1px solid var(--line);background:var(--card);transition:.15s}
+  .btn:hover{transform:translateY(-1px);border-color:rgba(255,255,255,.22)}
+  .btn.primary{background:var(--text);color:#0a0b10;border-color:var(--text)}
+  .btn small{display:block;font-size:.7rem;font-weight:500;opacity:.7;line-height:1}
+  .btn b{font-size:1.02rem;line-height:1.15}
+
+  /* Phone mockup */
+  .device{justify-self:center;width:280px;max-width:78vw}
+  .phone{position:relative;border-radius:44px;background:#1c1f29;padding:11px;
+    box-shadow:0 40px 90px rgba(0,0,0,.55),inset 0 0 0 1.5px rgba(255,255,255,.06);border:1px solid #2a2e3a}
+  .screen{position:relative;border-radius:34px;overflow:hidden;aspect-ratio:9/19.5;
+    background:linear-gradient(180deg,#243042,#11161f 55%,#0a0d13)}
+  .notch{position:absolute;top:9px;left:50%;transform:translateX(-50%);width:90px;height:22px;background:#000;border-radius:14px;z-index:3}
+  /* simulated scene */
+  .scene{position:absolute;inset:0;background:
+     radial-gradient(120px 160px at 50% 38%,rgba(120,140,170,.5),transparent 70%),
+     linear-gradient(180deg,#2d3a4f,#161d28 60%,#0c1118)}
+  .silh{position:absolute;left:50%;bottom:24%;transform:translateX(-50%);width:120px;height:150px;
+     background:radial-gradient(60px 60px at 50% 22%,#0c0f15 60%,transparent 62%),
+                linear-gradient(180deg,#0c0f15,#0c0f15);border-radius:60px 60px 0 0;opacity:.92}
+  /* prompter lines */
+  .prompt{position:absolute;left:18px;right:18px;top:30%;display:flex;flex-direction:column;gap:9px;align-items:center;z-index:2}
+  .prompt i{display:block;height:7px;border-radius:4px;background:rgba(255,255,255,.45);width:88%}
+  .prompt i.s{width:64%}.prompt i.active{background:var(--accent);box-shadow:0 0 14px rgba(255,210,63,.5);height:8px;width:80%}
+  .prompt i.dim{opacity:.35}
+  /* HUD */
+  .hud{position:absolute;left:12px;right:12px;bottom:14px;background:rgba(0,0,0,.72);border:1px solid var(--line);
+     border-radius:16px;padding:11px;z-index:3}
+  .hud .seg{display:flex;gap:5px;margin-bottom:10px}
+  .hud .seg b{flex:1;text-align:center;font-size:.6rem;color:var(--muted);background:rgba(255,255,255,.06);border-radius:7px;padding:5px 0}
+  .hud .seg b.on{background:var(--text);color:#0a0b10}
+  .hud .row{display:flex;align-items:center;justify-content:space-between}
+  .dots{display:flex;gap:13px}
+  .dots u{width:24px;height:24px;border-radius:50%;background:rgba(255,255,255,.12);display:block}
+  .rec{width:40px;height:40px;border-radius:50%;background:#ff3b30;box-shadow:0 0 0 3px rgba(255,59,48,.25)}
+
+  /* Sections */
+  section{padding:74px 0}
+  .eyebrow{color:var(--accent2);font-weight:700;font-size:.85rem;letter-spacing:1px;text-transform:uppercase}
+  h2{font-size:clamp(1.7rem,3.5vw,2.4rem);letter-spacing:-.4px;margin:8px 0 10px;font-weight:800}
+  .lead{color:var(--muted);max-width:40em}
+  .grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;margin-top:38px}
+  @media(max-width:860px){.grid{grid-template-columns:1fr 1fr}}
+  @media(max-width:560px){.grid{grid-template-columns:1fr}}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:22px}
+  .card .ic{width:42px;height:42px;border-radius:11px;display:grid;place-items:center;font-size:20px;
+    background:rgba(255,210,63,.12);border:1px solid rgba(255,210,63,.2);margin-bottom:14px}
+  .card h3{font-size:1.06rem;margin-bottom:6px}
+  .card p{color:var(--muted);font-size:.94rem}
+
+  /* Privacy band */
+  .band{background:linear-gradient(180deg,var(--bg2),var(--bg));border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+  .band .wrap{display:grid;grid-template-columns:1fr 1fr;gap:34px;align-items:center}
+  @media(max-width:760px){.band .wrap{grid-template-columns:1fr}}
+  .checks{list-style:none;display:flex;flex-direction:column;gap:12px;margin-top:18px}
+  .checks li{display:flex;gap:12px;align-items:flex-start}
+  .checks li::before{content:"✓";color:#30d158;font-weight:800;margin-top:1px}
+
+  /* Pricing */
+  .plans{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-top:38px}
+  @media(max-width:680px){.plans{grid-template-columns:1fr}}
+  .plan{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:26px}
+  .plan.pro{border-color:rgba(255,210,63,.4);box-shadow:0 0 0 1px rgba(255,210,63,.15),0 30px 60px rgba(0,0,0,.35)}
+  .plan h3{font-size:1.3rem;display:flex;align-items:center;gap:9px}
+  .plan .price{color:var(--muted);margin:6px 0 16px;font-size:.95rem}
+  .plan ul{list-style:none;display:flex;flex-direction:column;gap:10px}
+  .plan li{display:flex;gap:10px;font-size:.95rem}.plan li::before{content:"›";color:var(--accent);font-weight:800}
+  .pill{font-size:.68rem;text-transform:uppercase;letter-spacing:.5px;color:var(--accent);
+    border:1px solid rgba(255,210,63,.35);border-radius:999px;padding:3px 9px}
+
+  footer{border-top:1px solid var(--line);padding:46px 0 60px;color:var(--muted);font-size:.92rem}
+  footer .wrap{display:flex;flex-wrap:wrap;gap:18px;justify-content:space-between;align-items:center}
+  footer a{color:var(--muted)}footer a:hover{color:var(--text)}
+  .flinks{display:flex;gap:22px;flex-wrap:wrap}
+</style>
+</head>
+<body>
+
+<nav><div class="wrap">
+  <a class="brand" href="/"><span class="logo-mark"><span></span></span> VideoNarraCue</a>
+  <div class="nav-links">
+    <a href="#features">Features</a>
+    <a href="#privacy">Privacy</a>
+    <a href="#pricing">Pricing</a>
+    <a href="/support/">Support</a>
+  </div>
+</div></nav>
+
+<header class="hero"><div class="wrap">
+  <div>
+    <span class="badge">Coming soon to the App Store</span>
+    <h1>Read your script <span class="accent">while</span> you record.</h1>
+    <p class="sub">VideoNarraCue is a teleprompter and camera recorder for iPhone. Your script scrolls over the live camera, you keep eye contact, and the clip saves straight to Photos — everything on-device.</p>
+    <div class="cta">
+      <span class="btn primary"><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M16.4 12.9c0-2.3 1.9-3.4 2-3.5-1.1-1.6-2.8-1.8-3.4-1.8-1.4-.1-2.8.9-3.5.9-.7 0-1.8-.8-3-.8-1.5 0-2.9.9-3.7 2.3-1.6 2.7-.4 6.8 1.1 9 .7 1.1 1.6 2.3 2.8 2.2 1.1 0 1.5-.7 2.9-.7 1.3 0 1.7.7 2.9.7 1.2 0 2-1.1 2.7-2.2.9-1.3 1.2-2.5 1.2-2.6-.1 0-2.3-.9-2.3-3.4zM14.2 6.3c.6-.8 1-1.8.9-2.9-.9 0-2 .6-2.6 1.3-.6.7-1.1 1.7-.9 2.8 1 .1 2-.5 2.6-1.2z"/></svg><b>App Store</b></span>
+      <a class="btn" href="#features"><b>See what it does</b></a>
+    </div>
+  </div>
+  <div class="device" aria-hidden="true">
+    <div class="phone"><div class="screen">
+      <div class="notch"></div>
+      <div class="scene"><div class="silh"></div></div>
+      <div class="prompt">
+        <i class="dim s"></i><i class="dim"></i><i class="active"></i><i></i><i class="s"></i><i class="dim"></i>
+      </div>
+      <div class="hud">
+        <div class="seg"><b class="on">9:16</b><b>1:1</b><b>16:9</b></div>
+        <div class="row"><div class="dots"><u></u><u></u><u></u></div><div class="rec"></div></div>
+      </div>
+    </div></div>
+  </div>
+</div></header>
+
+<section id="features"><div class="wrap">
+  <span class="eyebrow">Everything in one screen</span>
+  <h2>Built for creators who talk to camera</h2>
+  <p class="lead">No second device, no taped notes. Frame your shot, pick your format, and read naturally.</p>
+  <div class="grid">
+    <div class="card"><div class="ic">🎬</div><h3>Teleprompter over live camera</h3><p>Your text scrolls on top of the real camera preview. Mirror it for beam-splitter glass.</p></div>
+    <div class="card"><div class="ic">📐</div><h3>WYSIWYG formats</h3><p>Pick 9:16, 1:1 or 16:9 before you film — the preview crops to exactly how the clip will look. Landscape for cinematic 16:9.</p></div>
+    <div class="card"><div class="ic">💬</div><h3>On-device captions</h3><p>Generate an <code>.srt</code> subtitle file from your voice, transcribed entirely on your device. No cloud, no cost.</p></div>
+    <div class="card"><div class="ic">🖼️</div><h3>Your logo on video</h3><p>Overlay your brand in any corner of the recording. Clean, watermark-free clips on Pro.</p></div>
+    <div class="card"><div class="ic">🔊</div><h3>Read aloud & voice tools</h3><p>Turn a script into audio with on-device text-to-speech for rehearsal or narration.</p></div>
+    <div class="card"><div class="ic">📄</div><h3>Import & scan scripts</h3><p>Bring in PDF/TXT, or scan a printed page with on-device OCR straight into the prompter.</p></div>
+    <div class="card"><div class="ic">🎚️</div><h3>Volume-button remote</h3><p>Play/pause and rewind the scroll with the hardware volume buttons — hands stay in frame.</p></div>
+    <div class="card"><div class="ic">⚙️</div><h3>Pro controls</h3><p>Countdown, stabilization, up to 4K, HEVC/H.264, font/color/spacing customization.</p></div>
+    <div class="card"><div class="ic">🌍</div><h3>7 languages</h3><p>English, Romanian, French, German, Italian, Portuguese and Spanish.</p></div>
+  </div>
+</div></section>
+
+<section id="privacy" class="band"><div class="wrap">
+  <div>
+    <span class="eyebrow">Privacy by design</span>
+    <h2>Your content never leaves your device</h2>
+    <p class="lead">There are no servers receiving your videos, scripts or audio. No accounts, no analytics, no tracking.</p>
+  </div>
+  <ul class="checks">
+    <li>Recordings are saved to your own Photos library.</li>
+    <li>Captions and speech run on-device with Apple's frameworks.</li>
+    <li>Scripts and settings are stored locally on your iPhone.</li>
+    <li>No third-party trackers, ads, or data collection.</li>
+    <li><a class="accent" href="/privacy/">Read the full Privacy Policy →</a></li>
+  </ul>
+</div></section>
+
+<section id="pricing"><div class="wrap">
+  <span class="eyebrow">Simple pricing</span>
+  <h2>Start free. Go Pro when you need more.</h2>
+  <p class="lead">Pro is an optional subscription billed by Apple — available monthly, every 3 months, or yearly.</p>
+  <div class="plans">
+    <div class="plan">
+      <h3>Free</h3>
+      <p class="price">Everything you need to start</p>
+      <ul>
+        <li>Teleprompter + camera recording</li>
+        <li>All formats, 1080p</li>
+        <li>Full prompter customization</li>
+        <li>Import, scan & read-aloud</li>
+        <li>Up to 3 saved scripts · clips include a small watermark</li>
+      </ul>
+    </div>
+    <div class="plan pro">
+      <h3>Pro <span class="pill">Most features</span></h3>
+      <p class="price">From a few dollars a month</p>
+      <ul>
+        <li>No watermark</li>
+        <li>4K recording</li>
+        <li>Unlimited scripts</li>
+        <li>Automatic captions (.srt)</li>
+        <li>Logo on video</li>
+      </ul>
+    </div>
+  </div>
+</div></section>
+
+<footer><div class="wrap">
+  <div>© 2026 VideoNarraCue</div>
+  <div class="flinks">
+    <a href="/privacy/">Privacy</a>
+    <a href="/support/">Support</a>
+    <a href="https://www.apple.com/legal/internet-services/itunes/dev/stdeula/">Terms of Use</a>
+    <a href="mailto:catalinionutportan@hotmail.com">Contact</a>
+  </div>
+</div></footer>
+
+</body>
+</html>
